@@ -3,6 +3,8 @@ import user from './assets/user.svg';
 
 
 const form = document.querySelector('form');
+const formPhone = document.getElementById('formPhon');
+
 const chatContainer = document.querySelector('#chat_container');
 let loadInterval;
 let isLoaded = true;
@@ -290,9 +292,26 @@ function soundRender(audio, apikey) {
   aud.controls = true
   aud.setAttribute("autoplay", '')
 }
+const handleSubmitPhone = async (e) => {
+  isLoaded = false;
+  e.preventDefault();
+  const formData = new FormData(formPhone);
 
+  const response = await fetch('http://localhost:5000/phoneMessage', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      phone: formData.get('UserPhoneNumber'),
+      type: 'correction'
+    })
+  })
+}
 
 form.addEventListener('submit', handleSubmit);
+formPhone.addEventListener('submit', handleSubmitPhone);
+
 form.addEventListener('keyup', (e) => {
   if (e.keyCode === 13) {
     handleSubmit(e);

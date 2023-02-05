@@ -11,7 +11,7 @@ import { default as Twilio } from 'twilio';
 const accountSID = process.env.TWILIO_ACCOUNT_SID;
 const authToken = process.env.TWILIO_AUTH_TOKEN;
 
-const twilioClient = Twilio(accountSID,authToken);
+const twilioClient = Twilio(accountSID, authToken);
 
 const configuration = new Configuration({
     apiKey: process.env.OPENAI_API_KEY,
@@ -24,7 +24,6 @@ app.use(cors());
 app.use(express.json());
 
 app.get('/', async (req, res) => {
-    sendTextMessages()
     res.status(200).send({
         message: 'Testing',
     })
@@ -82,10 +81,59 @@ app.post('/', async (req, res) => {
 
     }
 })
-async function sendTextMessages() {
-    const message = await  twilioClient.messages.create({
-        body: 'hello from camping Tales!',
-        to: '+14389331998',
+app.post('/phoneMessage', async (req, res) => {
+    const phoneNumber = req.body.phone;
+    var message = ''
+    var senttextMessage = ''
+    var story = ''
+
+    try {
+        if (db !== "") {
+            message = 'Hello this is where you last left off: ' + db;
+            senttextMessage = await sendTextMessages(phoneNumber, message)
+            console.log(senttextMessage)
+        }
+        db = 0;
+        story = await getRandomStory()
+        message = 'Hello, Do You Want To Hear Some More Stories?' + story;
+        senttextMessage = await sendTextMessages(phoneNumber, message)
+        console.log(senttextMessage)
+
+
+        res.status(200).send({
+            message: 'working',
+        })
+
+
+    } catch (error) {
+        console.log(error);
+        res.status(500).send({ error });
+
+    }
+})
+async function getRandomStory() {
+    try {
+        var command = "tell me a funny random story";
+        const response = await openai.createCompletion({
+            model: "text-davinci-003",
+            prompt: `${command}`,
+            temperature: 1.0,
+            max_tokens: 200,
+            top_p: 1,
+            frequency_penalty: 0.5,
+            presence_penalty: 0,
+
+        });
+        return response.data.choices[0].text
+    } catch (error) {
+        console.log(error);
+    }
+}
+async function sendTextMessages(phoneNumber, story) {
+    phoneNumber = '+1' + phoneNumber
+    const message = await twilioClient.messages.create({
+        body: story,
+        to: phoneNumber,
         from: '+12546556708'
     }).then(message => console.log(message))
         .catch(error => console.log(error))

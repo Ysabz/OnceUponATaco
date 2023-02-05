@@ -35,10 +35,11 @@
         </button>
       </div>
       <div class="modal-body">
-        <form style="text-align: center;">
+        <form id="formPhon" style="text-align: center;">
           <label>Did You Enjoy Your Journey? If You Would Like To Hear More From US: </label>
-          <input id="UserPhoneNumber" name="UserPhoneNumber" type="tel" oninput="this.value=this.value.replace(/[^0-9]/g,'');" maxlength="10">
+          <input required title="Ten letter phone number" id="UserPhoneNumber" name="UserPhoneNumber" type="tel" oninput="this.value=this.value.replace(/[^0-9]/g,'');" maxlength="10" minlength="10">
           <button id="submitPhoneNumber" type = "submit">Register</button>
+          <div id="errorPhoneApi"></div>
         </form>
       </div>
       <div class="modal-footer">

@@ -122,7 +122,7 @@ body {
   margin: 0 auto;
   padding: 10px;
   background: #40414F;
-
+  border-radius: 50px;
   display: flex;
   flex-direction: row;
   gap: 10px;
