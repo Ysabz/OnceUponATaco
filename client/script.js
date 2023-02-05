@@ -157,3 +157,62 @@ function correctionChatStripe(value, uniqueId) {
     `
   )
 }
+
+
+// on click event for selecting word on a single click
+$('#chat_container').on("click", async function (event) {
+  event.preventDefault();
+  $("span.popup-tag").css("display", "none");
+  if (isLoaded) {
+    const s = window.getSelection();
+    var range = s.getRangeAt(0);
+    var node = s.anchorNode;
+
+    // decrease start offset until a white space or puntation is reached or if reached the beginning of the text 
+    while (range.toString().indexOf(' ') != 0 && range.startOffset > 0 && !(!!range.toString().charAt(0).match(/^[.,:!?"]/))) {
+      range.setStart(node, range.startOffset - 1);
+    }
+
+    if (range.toString().indexOf(' ') == 0 || !!range.toString().charAt(0).match(/^[.,:!?"]/)) {
+      range.setStart(node, range.startOffset + 1);
+    }
+
+    while (
+      range.toString().indexOf(' ') == -1 &&
+      range.toString().trim() != '' &&
+      range.endOffset + 1 < s.baseNode.wholeText.length
+      &&
+      !(!!range.toString().charAt(range.toString().length - 1).match(/^[.,:!?"]/))
+    ) {
+      range.setEnd(node, range.endOffset + 1);
+    }
+
+
+    if (!!range.toString().charAt(range.toString().length - 1).match(/^[.,:!?"]/)) {
+      range.setEnd(node, range.endOffset - 1);
+    }
+
+    // remove extra space
+    range.setEnd(node, range.endOffset);
+    var str = range.toString().trim();
+    // remove last selection if is not letter or number
+    const lastChar = range.toString().charAt(range.toString().length - 1);
+    if (!/^[a-zA-Z0-9]*$/.test(lastChar)) {
+      range.setEnd(node, range.endOffset - 1);
+    }
+    if (/^[a-zA-Z]*$/.test(range.toString())) {
+      str = range.toString().trim();
+      if (str != '') {
+        $("span.popup-tag").css("display", "block");
+        $("span.popup-tag").css("top", event.clientY);
+        $("span.popup-tag").css("left", event.clientX);
+        $("span.popup-tag").text(str);
+      } else {
+        $("span.popup-tag").css("display", "none");
+      }
+
+    }
+
+  }
+
+});
