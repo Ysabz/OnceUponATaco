@@ -247,6 +247,7 @@ $('#chat_container').on("click", async function (event) {
     if (/^[a-zA-Z]*$/.test(range.toString())) {
       str = range.toString().trim();
       if (str != '') {
+        str = await getDefinition(str);
         $("span.popup-tag").css("display", "block");
         $("span.popup-tag").css("top", event.clientY);
         $("span.popup-tag").css("left", event.clientX);
@@ -277,4 +278,13 @@ async function getDefinition(word) {
     soundRender(audio, dictionaryKey)
   }
   return definition
+}
+
+function soundRender(audio, apikey) {
+  let subFolder = audio.charAt(0)
+  let soundSource = https://media.merriam-webster.com/soundc11/${subFolder}/${audio}.wav?key=${apikey}
+  let aud = document.getElementById("audioplayer")
+  aud.src = soundSource
+  aud.controls = true
+  aud.setAttribute("autoplay", '')
 }
