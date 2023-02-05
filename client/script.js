@@ -14,13 +14,66 @@ form.addEventListener('keyup', (e) => {
   }
 })
 
+
+
 // handle message submission
 const handleSubmit = async (e) => {
-    
-    e.preventDefault();
-  
-    const formData = new FormData(form);
-  
+  isLoaded = false;
+  e.preventDefault();
+
+  const formData = new FormData(form);
+  // user's chatstripe
+  chatContainer.innerHTML += chatStripe(false, formData.get('prompt'));
+  form.reset();
+
+  chatContainer.scrollTop = chatContainer.scrollHeight;
+
+
+  // fetch data from server -> bot's response 
+  // const response = await fetch('https://aichatbottest.onrender.com', {
+  const response = await fetch('http://localhost:5000', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      prompt: formData.get('prompt'),
+      type: 'correction'
+    })
+  })
+
+  clearInterval(loadInterval);
+
+
+  if (response.ok) {
+    const data = await response.json();
+    const parsedData = data.bot.trim();
+    // check there was no grammar mistakes skip this step
+    if (parsedData.localeCompare(formData.get('prompt').trim()) != 0) {
+
+      // text correction chatstripe
+      const uniqueIdCorrector = generateUniqueId();
+      chatContainer.innerHTML += correctionChatStripe(" ", uniqueIdCorrector);
+
+
+
+      const messageDiv = document.getElementById(uniqueIdCorrector);
+
+      messageDiv.innerHTML = '';
+      typeText(messageDiv, "Correction:" + parsedData, formData, function () { handleCompletion(formData) });
+    }
+    else {
+      handleCompletion(formData);
+    }
+
+  } else {
+    const err = await response.text();
+
+    messageDiv.innerHTML = "Something went wrong";
+
+    alert(err);
+  }
+
 }
 
 
