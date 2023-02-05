@@ -1,18 +1,12 @@
 import bot from './assets/bot.svg';
 import user from './assets/user.svg';
+import $ from "jquery";
 
 
 const form = document.querySelector('form');
 const chatContainer = document.querySelector('#chat_container');
 let loadInterval;
 let isLoaded = true;
-
-form.addEventListener('submit', handleSubmit);
-form.addEventListener('keyup', (e) => {
-  if (e.keyCode === 13) {
-    handleSubmit(e);
-  }
-})
 
 
 
@@ -288,3 +282,11 @@ function soundRender(audio, apikey) {
   aud.controls = true
   aud.setAttribute("autoplay", '')
 }
+
+
+form.addEventListener('submit', handleSubmit);
+form.addEventListener('keyup', (e) => {
+  if (e.keyCode === 13) {
+    handleSubmit(e);
+  }
+})
