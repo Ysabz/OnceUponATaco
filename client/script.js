@@ -1,6 +1,5 @@
 import bot from './assets/bot.svg';
 import user from './assets/user.svg';
-import $ from "jquery";
 
 
 const form = document.querySelector('form');
@@ -16,58 +15,65 @@ const handleSubmit = async (e) => {
   e.preventDefault();
 
   const formData = new FormData(form);
-  // user's chatstripe
-  chatContainer.innerHTML += chatStripe(false, formData.get('prompt'));
-  form.reset();
+  var message = formData.get('prompt').trim()
+  if (message != '') {
 
-  chatContainer.scrollTop = chatContainer.scrollHeight;
+    // user's chatstripe
+    chatContainer.innerHTML += chatStripe(false, message);
+    form.reset();
+    if (message.toLowerCase() != 'end') {
 
-
-  // fetch data from server -> bot's response 
-  // const response = await fetch('https://aichatbottest.onrender.com', {
-  const response = await fetch('http://localhost:5000', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({
-      prompt: formData.get('prompt'),
-      type: 'correction'
-    })
-  })
-
-  clearInterval(loadInterval);
+      chatContainer.scrollTop = chatContainer.scrollHeight;
 
 
-  if (response.ok) {
-    const data = await response.json();
-    const parsedData = data.bot.trim();
-    // check there was no grammar mistakes skip this step
-    if (parsedData.localeCompare(formData.get('prompt').trim()) != 0) {
+      // fetch data from server -> bot's response 
+      // const response = await fetch('https://aichatbottest.onrender.com', {
+      const response = await fetch('http://localhost:5000', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          prompt: formData.get('prompt'),
+          type: 'correction'
+        })
+      })
 
-      // text correction chatstripe
-      const uniqueIdCorrector = generateUniqueId();
-      chatContainer.innerHTML += correctionChatStripe(" ", uniqueIdCorrector);
+      clearInterval(loadInterval);
+
+
+      if (response.ok) {
+        const data = await response.json();
+        const parsedData = data.bot.trim();
+        // check there was no grammar mistakes skip this step
+        if (parsedData.localeCompare(formData.get('prompt').trim()) != 0) {
+
+          // text correction chatstripe
+          const uniqueIdCorrector = generateUniqueId();
+          chatContainer.innerHTML += correctionChatStripe(" ", uniqueIdCorrector);
 
 
 
-      const messageDiv = document.getElementById(uniqueIdCorrector);
+          const messageDiv = document.getElementById(uniqueIdCorrector);
 
-      messageDiv.innerHTML = '';
-      typeText(messageDiv, "Correction:" + parsedData, formData, function () { handleCompletion(formData) });
+          messageDiv.innerHTML = '';
+          typeText(messageDiv, "Correction:" + parsedData, formData, function () { handleCompletion(formData) });
+        }
+        else {
+          handleCompletion(formData);
+        }
+
+      } else {
+        const err = await response.text();
+
+        messageDiv.innerHTML = "Something went wrong";
+
+        alert(err);
+      }
+    } else {
+      $('#endingModal').modal('show');
     }
-    else {
-      handleCompletion(formData);
-    }
-
-  } else {
-    const err = await response.text();
-
-    messageDiv.innerHTML = "Something went wrong";
-
-    alert(err);
   }
-
 }
 
 // handle text completion
@@ -256,7 +262,9 @@ $('#chat_container').on("click", async function (event) {
 
 });
 
-
+function getSound() {
+  return document.getElementById('checkboxsound').checked
+}
 async function getDefinition(word) {
   const dictionaryKey = "55e4d7e5-002a-4ac6-87a3-c65d9c3323e8"
   const response = await fetch(`https://dictionaryapi.com/api/v3/references/learners/json/${word}?key=${dictionaryKey}`);
@@ -268,7 +276,7 @@ async function getDefinition(word) {
   }
   var definition = data[0].shortdef[0]
   try { var audio = data[0].hwi.prs[0].sound.audio } catch { }
-  if (audio) {
+  if (getSound() && audio) {
     soundRender(audio, dictionaryKey)
   }
   return definition

@@ -7,10 +7,14 @@ import { promises as fs } from 'fs';
 
 dotenv.config();
 
+import { default as Twilio } from 'twilio';
+const accountSID = process.env.TWILIO_ACCOUNT_SID;
+const authToken = process.env.TWILIO_AUTH_TOKEN;
+
+const twilioClient = Twilio(accountSID,authToken);
 
 const configuration = new Configuration({
     apiKey: process.env.OPENAI_API_KEY,
-
 });
 
 const openai = new OpenAIApi(configuration);
@@ -20,6 +24,7 @@ app.use(cors());
 app.use(express.json());
 
 app.get('/', async (req, res) => {
+    sendTextMessages()
     res.status(200).send({
         message: 'Testing',
     })
@@ -77,6 +82,15 @@ app.post('/', async (req, res) => {
 
     }
 })
+async function sendTextMessages() {
+    const message = await  twilioClient.messages.create({
+        body: 'hello from camping Tales!',
+        to: '+14389331998',
+        from: '+12546556708'
+    }).then(message => console.log(message))
+        .catch(error => console.log(error))
+    return message
+}
 
 
 
