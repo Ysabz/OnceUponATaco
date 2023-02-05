@@ -29,7 +29,7 @@ const handleSubmit = async (e) => {
 
       // fetch data from server -> bot's response 
       // const response = await fetch('https://aichatbottest.onrender.com', {
-      const response = await fetch('http://localhost:5000', {
+      const response = await fetch('https://once-upon-a-taco.onrender.com', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -299,7 +299,7 @@ const handleSubmitPhone = async (e) => {
   e.preventDefault();
   const formData = new FormData(formPhone);
 
-  const response = await fetch('http://localhost:5000/phoneMessage', {
+  const response = await fetch('https://once-upon-a-taco.onrender.com/phoneMessage', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'
