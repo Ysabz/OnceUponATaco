@@ -121,7 +121,7 @@ body {
   max-width: 1280px;
   margin: 0 auto;
   padding: 10px;
-  background: #40414F;
+  background: #5a5c6d;
   border-radius: 50px;
   display: flex;
   flex-direction: row;
@@ -140,6 +140,11 @@ textarea {
   border: none;
   outline: none;
 }
+::placeholder {
+  color: rgb(255, 255, 255);
+  opacity: 1; /* Firefox */
+}
+::selection { background: #3e4bd9ce; }
 
 button {
   outline: 0;
@@ -191,7 +196,7 @@ button {
   bottom: 0;
   -webkit-transition: .4s;
   transition: .4s;
-  background-color: rgba(67, 87, 159, 0.36);
+  background-color: #94acfe;
 }
 
 .slider:before {
@@ -210,7 +215,7 @@ button {
 
 
 input:checked + .slider {
-  background-color: #43579f;
+  background-color: #3e4ad9;
 }
 
 input:focus + .slider {
@@ -232,4 +237,37 @@ input:checked + .slider:before {
 
 .slider.round:before {
   border-radius: 50%;
+}
+#modalcontent{
+  background-color: #444658;
+  font-size: 20px;
+  color: white;
+  padding: 25px;
+  border-radius: 10%;
+
+}
+#submitPhoneNumber{
+  background-color: #2196F3;
+  color: white;
+}
+.centerimage{
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: 60%;
+  padding: 5px;
+}
+
+#quote{
+  font-size: 20px;
+  font-style: italic;
+  padding: 30px;
+  text-align: center;
+}
+#modaltitle{
+  font-size: 30px;
+  color: white;
+  padding: 5px;
+  font-weight: bold;
+
 }
