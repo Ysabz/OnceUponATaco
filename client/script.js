@@ -170,7 +170,7 @@ function chatStripe(isAi, value, uniqueId) {
       alt= "${isAi ? 'bot' : 'user'}"
     />
     </div>
-    <textarea disabled class="message" id = ${uniqueId}> ${value}</textarea>
+    <div class="message" id = ${uniqueId}> ${value}</div>
     </div>
     </div>
     `
@@ -189,7 +189,7 @@ function correctionChatStripe(value, uniqueId) {
       alt= "${'bot'}"
     />
     </div>
-    <textarea disabled class="message" id = ${uniqueId}> ${value}</textarea>
+    <div class="message" id = ${uniqueId}> ${value}</div>
     </div>
     </div>
     `
