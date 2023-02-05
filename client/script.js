@@ -76,6 +76,50 @@ const handleSubmit = async (e) => {
 
 }
 
+// handle text completion
+const handleCompletion = async (formData) => {
+
+  //bot's chatstripe
+  const uniqueId = generateUniqueId();
+
+  chatContainer.innerHTML += chatStripe(true, " ", uniqueId);
+
+  chatContainer.scrollTop = chatContainer.scrollHeight;
+
+  const messageDiv = document.getElementById(uniqueId);
+
+  loader(messageDiv);
+
+  // fetch data from server -> bot's response 
+
+  // const response = await fetch('https://aichatbottest.onrender.com', {
+  const response = await fetch('http://localhost:5000', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      prompt: formData.get('prompt'),
+      type: 'completion'
+    })
+  })
+
+  clearInterval(loadInterval);
+  messageDiv.innerHTML = '';
+
+  if (response.ok) {
+    const data = await response.json();
+    const parsedData = data.bot.trim();
+    typeText(messageDiv, parsedData);
+  } else {
+    const err = await response.text();
+
+    messageDiv.innerHTML = "Something went wrong";
+
+    alert(err);
+  }
+
+}
 
 
 // show text is loading
