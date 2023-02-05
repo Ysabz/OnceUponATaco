@@ -265,7 +265,7 @@ $('#chat_container').on("click", async function (event) {
 
 async function getDefinition(word) {
   const dictionaryKey = "55e4d7e5-002a-4ac6-87a3-c65d9c3323e8"
-  const response = await fetch(https://dictionaryapi.com/api/v3/references/learners/json/${word}?key=${dictionaryKey});
+  const response = await fetch(`https://dictionaryapi.com/api/v3/references/learners/json/${word}?key=${dictionaryKey}`);
   const data = await response.json();
   if (!data.length) { return "Not found" }
   if (!data[0].shortdef) {
@@ -282,7 +282,7 @@ async function getDefinition(word) {
 
 function soundRender(audio, apikey) {
   let subFolder = audio.charAt(0)
-  let soundSource = https://media.merriam-webster.com/soundc11/${subFolder}/${audio}.wav?key=${apikey}
+  let soundSource = `https://media.merriam-webster.com/soundc11/${subFolder}/${audio}.wav?key=${apikey}`
   let aud = document.getElementById("audioplayer")
   aud.src = soundSource
   aud.controls = true
