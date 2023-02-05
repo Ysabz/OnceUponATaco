@@ -2,6 +2,7 @@ import express from 'express';
 import * as dotenv from 'dotenv';
 import cors from 'cors';
 import { Configuration, OpenAIApi } from 'openai';
+import cohere from 'cohere-ai';
 import path from 'path';
 import { promises as fs } from 'fs';
 
@@ -11,7 +12,8 @@ import { default as Twilio } from 'twilio';
 const accountSID = process.env.TWILIO_ACCOUNT_SID;
 const authToken = process.env.TWILIO_AUTH_TOKEN;
 
-const twilioClient = Twilio(accountSID,authToken);
+const twilioClient = Twilio(accountSID, authToken);
+cohere.init("1oNAuJRDAFJMrhkhkWjebsJYkRiVuNENOQqHrJ4v");
 
 const configuration = new Configuration({
     apiKey: process.env.OPENAI_API_KEY,
@@ -40,27 +42,52 @@ app.post('/', async (req, res) => {
         if (requestType === 'completion') {
             db += " " + prompt;
             var command = "continue this story in 3 sentences and try to make it funny:" + db;
-            const response = await openai.createCompletion({
-                model: "text-davinci-003",
-                prompt: `${command}`,
-                temperature: 0.2,
-                max_tokens: 3000,
-                top_p: 1,
-                frequency_penalty: 0.5,
-                presence_penalty: 0,
-            });
-            db += " " + response.data.choices[0].text;
 
-            const dbDir = path.join(process.cwd(), 'db');
-            const filedb = dbDir + '/test.txt';
-            fs.writeFile(filedb, db);
+            // openai
+            // const response = await openai.createCompletion({
+            //     model: "text-davinci-003",
+            //     prompt: `${command}`,
+            //     temperature: 0.2,
+            //     max_tokens: 3000,
+            //     top_p: 1,
+            //     frequency_penalty: 0.5,
+            //     presence_penalty: 0,
+            // });
+            // db += " " + response.data.choices[0].text;
+
+            // const dbDir = path.join(process.cwd(), 'db');
+            // const filedb = dbDir + '/test.txt';
+            // fs.writeFile(filedb, db);
+            // res.status(200).send({
+            //     bot: response.data.choices[0].text
+            // })
+
+
+            //cohere
+            var command = "continue this story and make it funny:" + db;
+            let response = await cohere.generate({
+                model: 'command-xlarge-20221108',
+                prompt: `${command}`,
+                max_tokens: 100,
+                temperature: 1.0,
+                k: 0,
+                p: 0.75,
+                frequency_penalty: 1,
+                presence_penalty: 1,
+                stop_sequences: [],
+                return_likelihoods: 'NONE'
+            });
+            db += " " + response.body.generations[0].text;
+
             res.status(200).send({
-                bot: response.data.choices[0].text
+                bot: response.body.generations[0].text
             })
 
         }
+
+
         else if (requestType === 'correction') {
-            var command = "Original:" + prompt +"\n" + "Standard American English:";
+            var command = "Original:" + prompt + "\n" + "Standard American English:";
             const response = await openai.createCompletion({
                 model: "text-davinci-003",
                 prompt: `${command}`,
@@ -83,7 +110,7 @@ app.post('/', async (req, res) => {
     }
 })
 async function sendTextMessages() {
-    const message = await  twilioClient.messages.create({
+    const message = await twilioClient.messages.create({
         body: 'hello from camping Tales!',
         to: '+14389331998',
         from: '+12546556708'
