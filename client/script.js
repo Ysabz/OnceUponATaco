@@ -5,6 +5,7 @@ import user from './assets/user.svg';
 const form = document.querySelector('form');
 const chatContainer = document.querySelector('#chat_container');
 let loadInterval;
+let isLoaded = true;
 
 form.addEventListener('submit', handleSubmit);
 form.addEventListener('keyup', (e) => {
@@ -64,4 +65,42 @@ function generateUniqueId() {
   const hexadecimalString = randomNumber.toString(16);
 
   return `id-${timestamp}-${hexadecimalString}`
+}
+
+
+function chatStripe(isAi, value, uniqueId) {
+  return (
+    `
+    <div class = "wrapper ${isAi && 'ai'}">
+    <div class= "chat">
+    <div class= "profile">
+    <img
+      src = "${isAi ? bot : user}"
+      alt= "${isAi ? 'bot' : 'user'}"
+    />
+    </div>
+    <textarea disabled class="message" id = ${uniqueId}> ${value}</textarea>
+    </div>
+    </div>
+    `
+  )
+}
+
+
+function correctionChatStripe(value, uniqueId) {
+  return (
+    `
+    <div class = "wrapper correction">
+    <div class= "chat">
+    <div class= "profile">
+    <img
+      src = "${bot}"
+      alt= "${'bot'}"
+    />
+    </div>
+    <textarea disabled class="message" id = ${uniqueId}> ${value}</textarea>
+    </div>
+    </div>
+    `
+  )
 }
