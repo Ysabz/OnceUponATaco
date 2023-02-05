@@ -20,12 +20,11 @@ const handleSubmit = async (e) => {
 
     // user's chatstripe
     chatContainer.innerHTML += chatStripe(false, message);
+    chatContainer.scrollTop = chatContainer.scrollHeight;
     form.reset();
     if (message.toLowerCase() != 'end') {
 
-      chatContainer.scrollTop = chatContainer.scrollHeight;
-
-
+      
       // fetch data from server -> bot's response 
       // const response = await fetch('https://aichatbottest.onrender.com', {
       const response = await fetch('http://localhost:5000', {
@@ -51,7 +50,7 @@ const handleSubmit = async (e) => {
           // text correction chatstripe
           const uniqueIdCorrector = generateUniqueId();
           chatContainer.innerHTML += correctionChatStripe(" ", uniqueIdCorrector);
-
+          chatContainer.scrollTop = chatContainer.scrollHeight;
 
 
           const messageDiv = document.getElementById(uniqueIdCorrector);
