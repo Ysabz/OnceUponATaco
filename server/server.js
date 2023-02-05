@@ -60,7 +60,7 @@ app.post('/', async (req, res) => {
 
         }
         else if (requestType === 'correction') {
-            var command = "correct grammar mistakes in the text and replace [?] with the proper word:" + prompt;
+            var command = "Original:" + prompt +"\n" + "Standard American English:";
             const response = await openai.createCompletion({
                 model: "text-davinci-003",
                 prompt: `${command}`,
