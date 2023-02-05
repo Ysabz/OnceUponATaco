@@ -26,7 +26,7 @@ const handleSubmit = async (e) => {
     form.reset();
     if (message.toLowerCase() != 'end') {
 
-      
+
       // fetch data from server -> bot's response 
       // const response = await fetch('https://aichatbottest.onrender.com', {
       const response = await fetch('http://localhost:5000', {
@@ -150,7 +150,10 @@ function typeText(element, text, data, callback) {
     else {
       isLoaded = true;
       clearInterval(interval);
-      if (callback) callback(data);
+      if (callback) {
+        isLoaded = false;
+        callback(data);
+      }
     }
   }, 20)
 }
