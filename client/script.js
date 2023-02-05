@@ -260,3 +260,21 @@ $('#chat_container').on("click", async function (event) {
   }
 
 });
+
+
+async function getDefinition(word) {
+  const dictionaryKey = "55e4d7e5-002a-4ac6-87a3-c65d9c3323e8"
+  const response = await fetch(https://dictionaryapi.com/api/v3/references/learners/json/${word}?key=${dictionaryKey});
+  const data = await response.json();
+  if (!data.length) { return "Not found" }
+  if (!data[0].shortdef) {
+    return "Not found"
+
+  }
+  var definition = data[0].shortdef[0]
+  try { var audio = data[0].hwi.prs[0].sound.audio } catch { }
+  if (audio) {
+    soundRender(audio, dictionaryKey)
+  }
+  return definition
+}
