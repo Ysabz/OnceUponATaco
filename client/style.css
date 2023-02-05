@@ -200,7 +200,7 @@ button {
 }
 
 .slider:before {
-  background-image:url('./sound-icon.png');
+  background-image:url('assets/sound-icon.png');
   background-size:cover;
   position: absolute;
   content: "";
@@ -223,7 +223,7 @@ input:focus + .slider {
 }
 
 input:checked + .slider:before {
-  background-image:url('./no-sound-icon.png');
+  background-image:url('assets/no-sound-icon.png');
   background-size:cover;
   -webkit-transform: translateX(26px);
   -ms-transform: translateX(26px);
