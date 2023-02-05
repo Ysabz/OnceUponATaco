@@ -94,7 +94,7 @@ const handleCompletion = async (formData) => {
   // fetch data from server -> bot's response 
 
   // const response = await fetch('https://aichatbottest.onrender.com', {
-  const response = await fetch('http://localhost:5000', {
+  const response = await fetch('https://once-upon-a-taco.onrender.com', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'
