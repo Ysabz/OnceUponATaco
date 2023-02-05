@@ -120,7 +120,7 @@ app.post('/phoneMessage', async (req, res) => {
             senttextMessage = await sendTextMessages(phoneNumber, message)
             console.log(senttextMessage)
         }
-        db = 0;
+        db = "";
         story = await getRandomStory()
         message = 'Hello, Do You Want To Hear Some More Stories?' + story;
         senttextMessage = await sendTextMessages(phoneNumber, message)
