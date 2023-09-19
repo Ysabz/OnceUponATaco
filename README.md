@@ -28,7 +28,7 @@ Ce projet a été développé en utilisant les technologies suivantes :
 
 ## Lien Devpost
 
-- Check out our project on Devpost: [Once Upon A Taco on Devpost](https://www.devpost.com/your-project-link)
+- Consultez notre projet sur Devpost: [Once Upon A Taco on Devpost](https://www.devpost.com/your-project-link)
   
 ## Contributeurs
 
